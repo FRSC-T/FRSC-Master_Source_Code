@@ -11,7 +11,7 @@ on:
     branches: [ master ]
 
 name: Docker Community Edition
-  description: Install the latest Docker Community Edition from Amazon Linux Extras, and enable the ec2-user user to manage docker without using sudo.
+  uses: Install the latest Docker Community Edition from Amazon Linux Extras, and enable the ec2-user user to manage docker without using sudo.
   schemaVersion: 1.0.1
   status:
    createBadge: 
@@ -74,28 +74,26 @@ name: Docker Community Edition
                   exit 1
                   fi
 
-#      - name: ValidateDockerCommandExists
-#        action: ExecuteBash
-#        inputs:
-#          commands:
-#            - |
-#              if type -P docker &>/dev/null; then
-#                  echo "Docker command exists."
-#                  ExecuteBash
-#              else
-#                  echo "Docker command does not exist. Failing."
-#                  exit 1
-#              fi
-#
-#      - name: ValidateDockerGroupMembership
-#        action: ExecuteBash
-#        inputs:
-#          commands:
-#            - |
-#              if groups ec2-user | grep &>/dev/null 'docker'; then
-#                  echo "The 'ec2-user' is a member of the 'docker' group."
-#                  exit 0
-#              else
-#                  echo "The 'ec2-user' is not a member of the 'docker' group. Failing."
-#                  exit 1
-#              fi
+      - name: ValidateDockerCommandExists
+        action: ExecuteBash
+        inputs:
+          commands:- | if type -P docker &>/dev/null; then
+                   echo "Docker command exists."
+                   ExecuteBash
+                   else
+                   echo "Docker command does not exist. Failing."
+                   exit 1
+                   fi
+
+            - name: ValidateDockerGroupMembership
+               action: ExecuteBash
+               inputs:
+               commands:
+               - |
+               if groups ec2-user | grep &>/dev/null 'docker'; the
+               echo "The 'ec2-user' is a member of the 'docker' group."
+               exit 0
+               else
+               echo "The 'ec2-user' is not a member of the 'docker' group. Failing."
+               exit 1
+               fi
