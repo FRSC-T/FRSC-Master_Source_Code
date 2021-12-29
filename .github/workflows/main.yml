@@ -27,19 +27,18 @@ jobs:
     - name .ci/install_dockerCE/
     - action ExecuteBash
     - inputs
-       commands:
-            - sudo amazon-linux-extras install docker
-            - sudo systemctl start docker
-            - sudo systemctl enable docker 
-            - sudo usermod -a -G docker ec2-user
-            - name RebootToEnablePermission_action Reboot
-
-            - name WaitDockerServiceStartupPostReboot
+       commands
+         - sudo amazon-linux-extras install docker
+         - sudo systemctl start docker
+         - sudo systemctl enable docker 
+         - sudo usermod -a -G docker ec2-user
+         - name RebootToEnablePermission_action Reboot
+         - name WaitDockerServiceStartupPostReboot
                action: ExecuteBash
                 inputs
                  commands
-             - |
-           ;  STATUS=success 
+                  - |
+                    ;  STATUS=success 
 
               # Total sleep time ~180 seconds for service startup.
               #echo  "Waiting for the Docker service to start"
@@ -64,9 +63,9 @@ jobs:
      steps:
        Do not loop here to allow a fast fail if validate phase is executed separately
        - name: ValidateDockerService
-         action: ExecuteBash
-         inputs:
-         commands:
+       - action: ExecuteBash
+       - inputs:
+       - commands:
            - |
              CUR_STATE=$(systemctl is-active docker)
              if [[ $CUR_STATE == "active" ]]; then
