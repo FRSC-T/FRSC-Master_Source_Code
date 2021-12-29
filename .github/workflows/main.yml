@@ -10,35 +10,33 @@ on:
   pull_request:
     branches: [ master ]
 
-#name: Docker Community Edition
-# description: Install the latest Docker Community Edition from Amazon Linux Extras, and enable the ec2-user user to manage docker without using sudo.
-#schemaVersion: 1.0.1
-#status:
-#  createBadge: 
-#  run:
-#  command: .ci/set_badge="github/workflows/main.yml](https://github.com/UnitedStatesBitcoinBankandExchange/USBTC-Master_fromFRSCtemplate/workflows/.github/workflows/main.yml/badge.svg?branch=master&event=page_build"
+name: Docker Community Edition
+  description: Install the latest Docker Community Edition from Amazon Linux Extras, and enable the ec2-user user to manage docker without using sudo.
+  schemaVersion: 1.0.1
+  status:
+   createBadge: 
+    run:
+    command: .ci/set_badge="github/workflows/main.yml](https://github.com/UnitedStatesBitcoinBankandExchange/USBTC-Master_fromFRSCtemplate/workflows/.github/workflows/main.yml/badge.svg?branch=master&event=page_build"
 
-# jobs:
-#    name: build
-#     Steps:
-#        name .ci/install_dockerCE/
-#        action ExecuteBash
-#        inputs
-#          commands
-#            - sudo amazon-linux-extras install docker
-#            - sudo systemctl start docker
-#            - sudo systemctl enable docker 
-#            - sudo usermod -a -G docker ec2-user
+ jobs:
+    name: build
+     Steps:
+        name .ci/install_dockerCE/
+        action ExecuteBash
+        inputs
+          commands
+            - sudo amazon-linux-extras install docker
+            - sudo systemctl start docker
+            - sudo systemctl enable docker 
+            - sudo usermod -a -G docker ec2-user
+            - name RebootToEnablePermission_action Reboot
 
-#      - name RebootToEnablePermissions
-#        action Reboot
-
- #     - name WaitDockerServiceStartupPostReboot
- #       action ExecuteBash
-#        inputs
-#          commands
-#            - |
-#              STATUS=fail
+            - name WaitDockerServiceStartupPostReboot
+               action: ExecuteBash
+                inputs
+                 commands
+             - |
+           ;  STATUS=success 
 
               # Total sleep time ~180 seconds for service startup.
               #echo  "Waiting for the Docker service to start"
@@ -54,28 +52,27 @@ on:
               #       sleep 5
               #    fi
               # done
+# if [[ $STATUS == "fail" ]]; then
+                   echo "Docker service failed to start within timeout period. Failing."
+                   exit 1
+                   fi
 
-             # if [[ $STATUS == "fail" ]]; then
-             #     echo "Docker service failed to start within timeout period. Failing."
-             #      exit 1
-             #  fi
-
- #  name: validate
-#    steps:
-      # Do not loop here to allow a fast fail if validate phase is executed separately
-#      - name: ValidateDockerService
-#        action: ExecuteBash
- #       inputs:
-#          commands:
-#            - |
-#              CUR_STATE=$(systemctl is-active docker)
-#              if [[ $CUR_STATE == "active" ]]; then
-#                  echo "Docker service is active."
-#                  exit 0
-#              else
-#                  echo "Docker service is not active. State '$CUR_STATE'. Failing."
-#                  exit 1
-#              fi
+   name: validate
+     steps:
+       Do not loop here to allow a fast fail if validate phase is executed separately
+       - name: ValidateDockerService
+         action: ExecuteBash
+         inputs:
+         commands:
+           - |
+             CUR_STATE=$(systemctl is-active docker)
+             if [[ $CUR_STATE == "active" ]]; then
+                  echo "Docker service is active."
+                  exit 0
+                   else
+                  echo "Docker service is not active. State '$CUR_STATE'. Failing."
+                  exit 1
+                  fi
 
 #      - name: ValidateDockerCommandExists
 #        action: ExecuteBash
