@@ -33,11 +33,11 @@ jobs:
          - sudo systemctl enable docker 
          - sudo usermod -a -G docker ec2-user
          - name RebootToEnablePermission_action Reboot
-         - name WaitDockerServiceStartupPostReboot
-               action: ExecuteBash
-                inputs
-                 commands
-                  - |
+    - name WaitDockerServiceStartupPostReboot
+    - action ExecuteBash
+    - inputs
+       commands
+              - |
                     ;  STATUS=success 
 
               # Total sleep time ~180 seconds for service startup.
@@ -61,11 +61,11 @@ jobs:
 
    name: validate
      steps:
-       Do not loop here to allow a fast fail if validate phase is executed separately
-       - name: ValidateDockerService
-       - action: ExecuteBash
-       - inputs:
-       - commands:
+#       Do not loop here to allow a fast fail if validate phase is executed separately
+       - name  ValidateDockerService
+       - action  ExecuteBash
+       - inputs
+       - commands
            - |
              CUR_STATE=$(systemctl is-active docker)
              if [[ $CUR_STATE == "active" ]]; then
@@ -76,10 +76,10 @@ jobs:
                   exit 1
                   fi
 
-      - name: ValidateDockerCommandExists
-        action: ExecuteBash
-        inputs:
-          commands:- | if type -P docker &>/dev/null; then
+      - name  ValidateDockerCommandExists
+      - action  ExecuteBash
+      - inputs 
+          commands - | if type -P docker &>/dev/null; then
                    echo "Docker command exists."
                    ExecuteBash
                    else
@@ -87,15 +87,15 @@ jobs:
                    exit 1
                    fi
 
-            - name: ValidateDockerGroupMembership
-               action: ExecuteBash
-               inputs:
-               commands:
-               - |
-               if groups ec2-user | grep &>/dev/null 'docker'; the
-               echo "The 'ec2-user' is a member of the 'docker' group."
-               exit 0
-               else
-               echo "The 'ec2-user' is not a member of the 'docker' group. Failing."
-               exit 1
-               fi
+      - name  ValidateDockerGroupMembership
+      - action  ExecuteBash
+      - inputs 
+          commands
+                 - |
+                 if groups ec2-user | grep &>/dev/null 'docker'; the
+                 echo "The 'ec2-user' is a member of the 'docker' group."
+                 exit 0
+                 else
+                 echo "The 'ec2-user' is not a member of the 'docker' group. Failing."
+                 exit 1
+                 fi
